@@ -11,7 +11,7 @@
            [storm.trident.operation.builtin Count Sum MapGet FilterNull]
            [storm.kafka.trident OpaqueTridentKafkaSpout
             TridentKafkaConfig]
-           [storm.kafka SpoutConfig KafkaConfig$ZkHosts StringScheme])
+           [storm.kafka SpoutConfig ZkHosts KafkaSpout StringScheme])
   (:require [trident-in-clojure.word-splitter]
             [clojure.tools.logging :as log])
   (:use [backtype.storm clojure config])
@@ -25,7 +25,7 @@
 (defn create-kafka-spout
   [{:keys [kafka topic]}]
   (let [{:keys [zookeeper broker-path]} kafka
-        zk-hosts (KafkaConfig$ZkHosts. zookeeper broker-path)
+        zk-hosts (ZkHosts. zookeeper broker-path)
         spout-config (TridentKafkaConfig. zk-hosts topic)]
     (set! (.scheme spout-config) (SchemeAsMultiScheme. (StringScheme.)))
     (OpaqueTridentKafkaSpout. spout-config)))
